@@ -1,0 +1,56 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/*
+      - mkosi.**
+  workflow_dispatch:
+  schedule:
+    - cron: 5 10 * * *
+
+jobs:
+  build:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        target:
+          - distro: centos
+            release: 10
+          - distro: fedora
+            release: 44
+          - distro: fedora
+            release: rawhide
+          - distro: rhel-ubi
+            release: 10
+        arch: [x86-64, arm64]
+        include:
+          - arch: x86-64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+
+    steps:
+      - name: Install mkosi
+        uses: systemd/mkosi@33d17b2b92b87b27842767df14c362e13023f735
+
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build image
+        run: mkosi -d ${{ matrix.target.distro }} -r ${{ matrix.target.release }}
+
+      - name: Delete symbolic links
+        run: find mkosi.output -maxdepth 1 -type l -delete
+
+      - name: Generate checksum file
+        run: for f in *; do sha256sum $f > $f.sha256; done
+        working-directory: mkosi.output
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.target.distro }}-${{ matrix.target.release }}_${{ matrix.arch }}
+          path: mkosi.output/*
+          retention-days: 2
