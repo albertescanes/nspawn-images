@@ -10,4 +10,4 @@ MatchPattern=@DISTRO@-@RELEASE@_@v_@ARCH@.tar.xz
 Type=subvolume
 Path=/var/lib/machines
 MatchPattern=@DISTRO@-@RELEASE@_@v_@ARCH@
-InstancesMax=2
+CurrentSymlink=@DISTRO@-@RELEASE@
