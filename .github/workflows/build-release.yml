@@ -52,6 +52,16 @@ jobs:
         run: sha256sum * > SHA256SUMS
         working-directory: mkosi.output
 
+      - name: Generate sysupdate transfer file
+        run: |
+          sed -e 's/@OWNER@/${{ github.repository_owner }}/g' \
+              -e 's/@REPO@/${{ github.event.repository.name }}/g' \
+              -e 's/@TAG@/$RELEASE_TAG/g' \
+              -e 's/@DISTRO@/${{ matrix.target.distro }}/g' \
+              -e 's/@RELEASE@/${{ matrix.target.release }}/g' \
+              -e 's/@ARCH@/${{ matrix.arch }}/g' \
+              .github/templates/sysupdate.transfer.in > mkosi.output/sysupdate.transfer
+
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:

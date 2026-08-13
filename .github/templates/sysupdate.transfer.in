@@ -1,0 +1,13 @@
+[Transfer]
+Verify=no
+
+[Source]
+Type=url-tar
+Path=https://github.com/@OWNER@/@REPO@/releases/download/@TAG@/
+MatchPattern=@DISTRO@-@RELEASE@_@v_@ARCH@.tar.xz
+
+[Target]
+Type=subvolume
+Path=/var/lib/machines
+MatchPattern=@DISTRO@-@RELEASE@_@v_@ARCH@
+InstancesMax=2
