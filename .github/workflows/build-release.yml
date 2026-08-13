@@ -51,11 +51,11 @@ jobs:
 
       - name: Generate sysupdate transfer file
         run: |
-          sed -e 's/@REPO@/${{ github.repository }}/g' \
-              -e 's/@TAG@/'$RELEASE_TAG'/g' \
-              -e 's/@DISTRO@/${{ matrix.target.distro }}/g' \
-              -e 's/@RELEASE@/${{ matrix.target.release }}/g' \
-              -e 's/@ARCH@/${{ matrix.arch }}/g' \
+          sed -e 's;@REPO@;${{ github.repository }};g' \
+              -e 's;@TAG@;'$RELEASE_TAG';g' \
+              -e 's;@DISTRO@;${{ matrix.target.distro }};g' \
+              -e 's;@RELEASE@;${{ matrix.target.release }};g' \
+              -e 's;@ARCH@;${{ matrix.arch }};g' \
               .github/templates/sysupdate.transfer.in > mkosi.output/sysupdate.transfer
 
       - name: Generate checksum file
