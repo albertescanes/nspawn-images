@@ -1,0 +1,5 @@
+[Exec]
+Ephemeral=yes
+
+[Network]
+VirtualEthernet=no
