@@ -65,5 +65,5 @@ jobs:
         run: |
           gh release delete $RELEASE_TAG --cleanup-tag -y || true
           sleep 5
-          gh release create $RELEASE_TAG mkosi.output/* -pt \
-            "${{ matrix.target.distro }} ${{ matrix.target.release }} for ${{ matrix.arch }}"
+          gh release create $RELEASE_TAG mkosi.output/* \
+            -pt "${{ matrix.target.distro }} ${{ matrix.target.release }} for ${{ matrix.arch }}"
