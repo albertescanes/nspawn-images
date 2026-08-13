@@ -48,8 +48,8 @@ jobs:
       - name: Delete symbolic links
         run: find mkosi.output -maxdepth 1 -type l -delete
 
-      - name: Rename checksum file
-        run: for f in *.SHA256SUMS; do mv $f SHA256SUMS; done
+      - name: Generate checksum file
+        run: sha256sum * > SHA256SUMS
         working-directory: mkosi.output
 
       - name: Upload artifact
