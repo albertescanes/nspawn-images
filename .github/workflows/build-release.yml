@@ -8,17 +8,12 @@ on:
       - mkosi.**
   workflow_dispatch:
   schedule:
-    - cron: 5 10 * * *
+    - cron: 0 2 * * *
 
 jobs:
-  build-release:
+  build:
     runs-on: ${{ matrix.runner }}
-    permissions:
-      contents: write
-    env:
-      RELEASE_TAG: ${{ matrix.target.distro }}-${{ matrix.target.release }}_${{ matrix.arch }}
     strategy:
-      fail-fast: false
       matrix:
         target:
           - distro: centos
@@ -49,31 +44,34 @@ jobs:
       - name: Delete symbolic links
         run: find mkosi.output -maxdepth 1 -type l -delete
 
-      - name: Generate sysupdate transfer file
-        run: |
-          sed -e 's;@REPO@;${{ github.repository }};g' \
-              -e 's;@TAG@;'$RELEASE_TAG';g' \
-              -e 's;@DISTRO@;${{ matrix.target.distro }};g' \
-              -e 's;@RELEASE@;${{ matrix.target.release }};g' \
-              -e 's;@ARCH@;${{ matrix.arch }};g' \
-              .github/templates/sysupdate.transfer.in > mkosi.output/sysupdate.transfer
-
       - name: Generate checksum file
-        run: sha256sum * > SHA256SUMS
+        run: for f in *; do sha256sum $f > $f.sha256; done
         working-directory: mkosi.output
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ env.RELEASE_TAG }}
+          name: ${{ matrix.target.distro }}-${{ matrix.target.release }}_${{ matrix.arch }}
           path: mkosi.output/*
           retention-days: 2
 
-      - name: Release
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete $RELEASE_TAG --cleanup-tag -y || true
+          gh release delete latest --cleanup-tag -y || true
           sleep 5
-          gh release create $RELEASE_TAG mkosi.output/* \
-            -pt "${{ matrix.target.distro }} ${{ matrix.target.release }} for ${{ matrix.arch }}"
+          gh release create latest artifacts/* -t $(date -u +%F)
