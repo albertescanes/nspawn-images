@@ -18,6 +18,7 @@ jobs:
     env:
       RELEASE_TAG: ${{ matrix.target.distro }}-${{ matrix.target.release }}_${{ matrix.arch }}
     strategy:
+      fail-fast: false
       matrix:
         target:
           - distro: centos
@@ -48,10 +49,6 @@ jobs:
       - name: Delete symbolic links
         run: find mkosi.output -maxdepth 1 -type l -delete
 
-      - name: Generate checksum file
-        run: sha256sum * > SHA256SUMS
-        working-directory: mkosi.output
-
       - name: Generate sysupdate transfer file
         run: |
           sed -e 's/@OWNER@/${{ github.repository_owner }}/g' \
@@ -62,14 +59,18 @@ jobs:
               -e 's/@ARCH@/${{ matrix.arch }}/g' \
               .github/templates/sysupdate.transfer.in > mkosi.output/sysupdate.transfer
 
-      - name: Upload artifact
+      - name: Generate checksum file
+        run: sha256sum * > SHA256SUMS
+        working-directory: mkosi.output
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
           name: ${{ env.RELEASE_TAG }}
           path: mkosi.output/*
           retention-days: 2
 
-      - name: Release image
+      - name: Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
