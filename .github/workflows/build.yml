@@ -13,6 +13,8 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: write
     strategy:
       matrix:
         target:
@@ -54,3 +56,12 @@ jobs:
           name: ${{ matrix.target.distro }}-${{ matrix.target.release }}_${{ matrix.arch }}
           path: mkosi.output/*
           retention-days: 2
+
+      - name: Release image
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete ${{ matrix.target.distro }}-${{ matrix.target.release }}_${{ matrix.arch }} --cleanup-tag -y || true
+          sleep 5
+          gh release create ${{ matrix.target.distro }}-${{ matrix.target.release }}_${{ matrix.arch }} mkosi.output/*
