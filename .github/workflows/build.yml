@@ -15,6 +15,8 @@ jobs:
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: write
+    env:
+      RELEASE_TAG: ${{ matrix.target.distro }}-${{ matrix.target.release }}_${{ matrix.arch }}
     strategy:
       matrix:
         target:
@@ -53,15 +55,14 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ matrix.target.distro }}-${{ matrix.target.release }}_${{ matrix.arch }}
+          name: ${{ env.RELEASE_TAG }}
           path: mkosi.output/*
           retention-days: 2
 
       - name: Release image
         env:
-          GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete ${{ matrix.target.distro }}-${{ matrix.target.release }}_${{ matrix.arch }} --cleanup-tag -y || true
+          gh release delete $RELEASE_TAG --cleanup-tag -y || true
           sleep 5
-          gh release create ${{ matrix.target.distro }}-${{ matrix.target.release }}_${{ matrix.arch }} mkosi.output/*
+          gh release create $RELEASE_TAG mkosi.output/*
