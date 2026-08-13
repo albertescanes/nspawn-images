@@ -3,7 +3,7 @@ Verify=no
 
 [Source]
 Type=url-tar
-Path=https://github.com/@OWNER@/@REPO@/releases/download/@TAG@/
+Path=https://github.com/@REPO@/releases/download/@TAG@/
 MatchPattern=@DISTRO@-@RELEASE@_@v_@ARCH@.tar.xz
 
 [Target]

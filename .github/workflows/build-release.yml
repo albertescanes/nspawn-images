@@ -51,8 +51,7 @@ jobs:
 
       - name: Generate sysupdate transfer file
         run: |
-          sed -e 's/@OWNER@/${{ github.repository_owner }}/g' \
-              -e 's/@REPO@/${{ github.event.repository.name }}/g' \
+          sed -e 's/@REPO@/${{ github.repository }}/g' \
               -e 's/@TAG@/'$RELEASE_TAG'/g' \
               -e 's/@DISTRO@/${{ matrix.target.distro }}/g' \
               -e 's/@RELEASE@/${{ matrix.target.release }}/g' \
