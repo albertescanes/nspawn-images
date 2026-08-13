@@ -14,9 +14,7 @@ All images are available for both x86-64 and arm64 architectures.
 
 ## Usage
 
-### Import an image
-
-#### Using systemd-sysupdate
+### Import an image using systemd-sysupdate
 
 Define a helper function:
 
@@ -43,7 +41,7 @@ The function will:
 - Install it to `/etc/sysupdate.<image>.d/`.
 - Run `updatectl update` to download and import the container image.
 
-#### Importing manually
+###  Import an image manually
 
 If you prefer to import the image manually without sysupdate, you can download the tarball directly from the [releases](../../releases) and use importctl:
 
