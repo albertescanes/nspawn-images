@@ -1,7 +1,0 @@
-[Exec]
-Boot=yes
-Ephemeral=yes
-PrivateUsers=pick
-
-[Network]
-VirtualEthernet=no
