@@ -15,6 +15,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
+        arch: [x86-64, arm64]
         include:
           - arch: x86-64
             runner: ubuntu-24.04
