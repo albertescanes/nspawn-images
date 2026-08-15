@@ -1,8 +1,7 @@
 [Exec]
 Boot=yes
-Ephemeral=no
-PrivateUsers=no
+Ephemeral=yes
+PrivateUsers=pick
 
 [Network]
-Private=no
 VirtualEthernet=no
