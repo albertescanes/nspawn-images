@@ -41,6 +41,9 @@ jobs:
       - name: Build image
         run: mkosi -d ${{ matrix.target.distro }} -r ${{ matrix.target.release }}
 
+      - name: Delete symbolic links
+        run: find mkosi.output -maxdepth 1 -type l -delete
+
       - name: Generate checksum file
         run: for f in *; do sha256sum $f > $f.sha256; done
         working-directory: mkosi.output
