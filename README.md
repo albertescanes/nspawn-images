@@ -6,9 +6,9 @@ Minimal OS container images built with [**mkosi**](https://github.com/systemd/mk
 
 | Distro | Images |
 |--------|--------|
-| CentOS | `centos-9`, `centos-10` |
+| CentOS | `centos-10` |
 | Fedora | `fedora-44`, `fedora-rawhide` |
-| RHEL UBI | `rhel-ubi-9`, `rhel-ubi-10` |
+| RHEL UBI | `rhel-ubi-10` |
 
 All images are available for both x86-64 and arm64 architectures.
 
