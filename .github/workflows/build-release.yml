@@ -6,13 +6,14 @@ on:
     paths:
       - .github/workflows/*
       - mkosi.**
-  workflow_dispatch:
   schedule:
     - cron: 0 2 * * *
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ${{ matrix.runner }}
+    timeout-minutes: 40
     strategy:
       matrix:
         target:
