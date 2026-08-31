@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - name: Install mkosi
-        uses: systemd/mkosi@f33cc45db3ddf0ed57594b58c9c161169d46e03c
+        uses: systemd/mkosi@1da3299aecc56a1ba590a7fb7ae868275bb46d93
 
       - name: Checkout
         uses: actions/checkout@v7
